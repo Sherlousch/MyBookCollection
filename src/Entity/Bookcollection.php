@@ -21,6 +21,9 @@ class Bookcollection
     #[ORM\OneToMany(mappedBy: 'collection', targetEntity: Book::class, orphanRemoval: true, cascade: ["persist"])]
     private Collection $books;
 
+    #[ORM\OneToOne(mappedBy: 'bookcollection', cascade: ['persist', 'remove'])]
+    private ?Membre $membre = null;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
@@ -76,5 +79,27 @@ class Bookcollection
     public function __toString() 
     {
         return $this->description;
+    }
+
+    public function getMembre(): ?Membre
+    {
+        return $this->membre;
+    }
+
+    public function setMembre(?Membre $membre): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($membre === null && $this->membre !== null) {
+            $this->membre->setBookcollection(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($membre !== null && $membre->getBookcollection() !== $this) {
+            $membre->setBookcollection($this);
+        }
+
+        $this->membre = $membre;
+
+        return $this;
     }
 }
