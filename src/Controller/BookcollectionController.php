@@ -22,7 +22,7 @@ class BookcollectionController extends AbstractController
     /**
     * Lists all Bookcollections entities.
     *
-    * @Route("bookcollection", name = "bookcollection_list", methods="GET")
+    * @Route("/bookcollection/list", name = "bookcollection_list", methods="GET")
     */
     public function listAction(ManagerRegistry $doctrine): Response
     {
@@ -45,7 +45,7 @@ class BookcollectionController extends AbstractController
     *    
     * @param Integer $id
     */
-    public function show(ManagerRegistry $doctrine, $id)
+    public function showAction(ManagerRegistry $doctrine, $id)
     {
         $BookcollectionRepo = $doctrine->getRepository(Bookcollection::class);
         $bookcollection = $BookcollectionRepo->find($id);

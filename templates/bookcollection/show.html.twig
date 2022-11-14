@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello {{bookcollection.membre}} !{% endblock %}
+{% block title %}About {{bookcollection.description}} !{% endblock %}
 
 {% block body %}
 <style>
@@ -9,10 +9,11 @@
 </style>
 
 <h1>{{bookcollection.description}}</h1>
+<h2>Owned by {{bookcollection.membre}}</h2>
 
 <ul>
   {% for book in bookcollection.books %}
-  <li>{{ book.title }}</li>
+  <li> <a href="/book/{{book.id}}">{{book.title}} </a> </li>
   {% endfor %}
 </ul>
 
