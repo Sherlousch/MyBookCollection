@@ -12,7 +12,7 @@
 
 <ul>
   {% for bookcollection in bookcollections %}
-  <li>{{ bookcollection.description }}</li>
+  <li> <a href="/bookcollection/{{bookcollection.id}}">{{bookcollection.description}}</a> </li>
   {% endfor %}
 </ul>
 {% endblock %}

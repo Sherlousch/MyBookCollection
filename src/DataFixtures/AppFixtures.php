@@ -33,6 +33,7 @@ class AppFixtures extends Fixture
        yield ["Solo Leveling T5", "Chugong", "Manhwa", "Lousch's Collection"];
        yield ["Solo Leveling T6", "Chugong", "Manhwa", "Lousch's Collection"];
        yield ["Solo Leveling T7", "Chugong", "Manhwa", "Lousch's Collection"];
+       yield ["Solo Leveling T8", "Chugong", "Manhwa", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T1", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T2", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T3", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
@@ -44,6 +45,7 @@ class AppFixtures extends Fixture
        yield ["Fullmetal Alchemist perfect T9", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T10", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T11", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T12", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
  
    }
  
