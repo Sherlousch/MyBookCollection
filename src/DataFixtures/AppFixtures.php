@@ -2,10 +2,12 @@
  
 namespace App\DataFixtures;
  
-use App\Entity\Bookcollection;
-use App\Repository\BookcollectionRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Bookcollection;
+use App\Repository\BookcollectionRepository;
+use App\Entity\Genre;
+use App\Repository\GenreRepository;
 use App\Entity\Book;
  
 class AppFixtures extends Fixture
@@ -20,11 +22,29 @@ class AppFixtures extends Fixture
    }
  
    /**
+    * Generates initialization data for genres : [name, parent_name]
+    * @return \\Generator
+    */
+    private static function genresDataGenerator()
+    {
+        yield ["Manga", null];
+        yield ["Manhwa", null];
+        yield ["Novel", null];
+        yield ["Shonen", "Manga"];
+        yield ["Shojo", "Manga"];
+        yield ["Fantasy novel", "Novel"];
+        yield ["Dective novel", "Novel"];
+        yield ["Science Fiction novel", "Novel"];
+        yield ["Dystopian novel", "Novel"];
+        yield ["Horror novel", "Novel"];
+    }
+
+   /**
     * Generates initialization data for books:
     *  [title, author, type, bookcollection_description]
     * @return \\Generator
     */
-   private static function booksGenerator()
+   private static function booksDataGenerator()
    {
        yield ["Solo Leveling T1", "Chugong", "Manhwa", "Lousch's Collection"];
        yield ["Solo Leveling T2", "Chugong", "Manhwa", "Lousch's Collection"];
@@ -46,6 +66,7 @@ class AppFixtures extends Fixture
        yield ["Fullmetal Alchemist perfect T10", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T11", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T12", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
+       yield ["The Hobbit", "J.R.R. Tolkien", "Novel", "Lousch's Collection"];
  
    }
  
@@ -59,8 +80,21 @@ class AppFixtures extends Fixture
            $manager->persist($bookcollection);         
        }
        $manager->flush();
+
+       $genreRepo = $manager->getRepository(Genre::class);
+
+       foreach (self::genresDataGenerator() as [$name, $parent_name] ) {
+            $genre = new Genre();
+            $genre->setName($name);
+            if ($parent_name !== null) {
+                $parent = $genreRepo->findOneBy(['name' => $parent_name]);
+                $genre->setParent($parent);
+            }
+            $manager->persist($genre);         
+        }
+        $manager->flush();
  
-       foreach (self::booksGenerator() as [$title, $author, $type, $bookcollection_description])
+       foreach (self::booksDataGenerator() as [$title, $author, $type, $bookcollection_description])
        {
            $bookcollection = $bookcollectionRepo->findOneBy(['description' => $bookcollection_description]);
            $book = new Book();
