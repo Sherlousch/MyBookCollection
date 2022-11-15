@@ -11,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class BookcollectionController extends AbstractController
 {
-    #[Route('/', name: 'app_bookcollection')]
+    #[Route('/bookcollection', name: 'app_bookcollection')]
     public function index(): Response
     {
         return $this->render('bookcollection/index.html.twig', [

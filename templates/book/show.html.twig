@@ -11,9 +11,9 @@
 <h1>{{ book.title }}</h1>
 
 <ul>
-  <li>{{ book.type }}</li>
-  <li>{{ book.author }}</li>
-  <li> <a href="/bookcollection/{{book.collection.id}}">{{book.collection}} </a> </li>
+  <li><b>Type: </b> {{ book.type }}</li>
+  <li><b>Autor: </b> {{ book.author }}</li>
+  <li><b>Collection: </b> <a href="/bookcollection/{{book.collection.id}}">{{book.collection}} </a> </li>
 </ul>
 
 {% endblock %}
