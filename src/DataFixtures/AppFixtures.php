@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
 
    /**
     * Generates initialization data for books:
-    *  [title, author, type, bookcollection_description]
+    *  [title, author, genre_name, bookcollection_description]
     * @return \\Generator
     */
    private static function booksDataGenerator()
@@ -95,17 +95,21 @@ class AppFixtures extends Fixture
         }
         
  
-       foreach (self::booksDataGenerator() as [$title, $author, $type, $bookcollection_description])
+       foreach (self::booksDataGenerator() as [$title, $author, $genre_name, $bookcollection_description])
        {
            $bookcollection = $bookcollectionRepo->findOneBy(['description' => $bookcollection_description]);
+           $genre = $genreRepo->findOneBy(['name' => $genre_name]);
            $book = new Book();
            $book->setCollection($bookcollection);
            $book->setTitle($title);
            $book->setAuthor($author);
-           $book->setType($type);
+           $genre->addBook($book);
+           $book->addGenre($genre);
            $bookcollection->addBook($book);
            // there's a cascade persist on bookcollection-books which avoids persisting down the relation
            $manager->persist($bookcollection);
+           $manager->persist($genre);
+           $manager->persist($book);
        }
        $manager->flush();
    }

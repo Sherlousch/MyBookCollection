@@ -77,6 +77,20 @@ class ShowGenreCommand extends Command
             }
         }
 
+        //Show books
+        if($genre->getBooks())
+        {
+            $output->writeln('no books');
+        }
+        else
+        {
+            $output->writeln('Books:');
+            foreach($genre->getBooks() as $book) 
+            {
+                $output->writeln('-'. $book);
+            }
+        }
+
         return Command::SUCCESS;
     }
 }

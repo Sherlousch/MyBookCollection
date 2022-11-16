@@ -11,7 +11,10 @@
 <h1>{{ book.title }}</h1>
 
 <ul>
-  <li><b>Type: </b> {{ book.type }}</li>
+  <li><b>Genres: </b> </li>
+  {% for genre in book.genres %}
+    <p>{{ genre.name }} </p>
+  {% endfor %}
   <li><b>Autor: </b> {{ book.author }}</li>
   <li><b>Collection: </b> <a href="/bookcollection/{{book.collection.id}}">{{book.collection}} </a> </li>
 </ul>

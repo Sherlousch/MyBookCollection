@@ -24,9 +24,13 @@ class Genre
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade: ['persist', 'remove'])]
     private Collection $subgenres;
 
+    #[ORM\ManyToMany(targetEntity: Book::class, mappedBy: 'genre', cascade: ['persist', 'remove'])]
+    private Collection $books;
+
     public function __construct()
     {
         $this->subgenres = new ArrayCollection();
+        $this->books = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,5 +95,32 @@ class Genre
     public function __toString() 
     {
         return $this->name;
+    }
+
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): self
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->addGenre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): self
+    {
+        if ($this->books->removeElement($book)) {
+            $book->removeGenre($this);
+        }
+
+        return $this;
     }
 }
