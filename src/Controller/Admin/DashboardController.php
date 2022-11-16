@@ -9,9 +9,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Book;
 use App\Entity\Membre;
 use App\Entity\Bookcollection;
+use App\Entity\Book;
+use App\Entity\Bookcase;
 
 
 class DashboardController extends AbstractDashboardController
@@ -35,8 +36,9 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Bookcollections', 'fa fa-home');
-        yield MenuItem::linkToCrud('Membres', 'fas fa-list', Membre::class);
-        yield MenuItem::linkToCrud('Books', 'fas fa-list', Book::class);
+        yield MenuItem::linkToDashboard('Bookcollections', 'fa fa-database');
+        yield MenuItem::linkToCrud('Membres', 'fa fa-user', Membre::class);
+        yield MenuItem::linkToCrud('Books', 'fa fa-book', Book::class);
+        yield MenuItem::linkToCrud('Bookcases', 'fa fa-bookmark', Bookcase::class);
     }
 }
