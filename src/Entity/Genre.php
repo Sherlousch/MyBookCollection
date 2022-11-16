@@ -18,10 +18,10 @@ class Genre
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subgenres')]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'subgenres', cascade: ['persist', 'remove'])]
     private ?self $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade: ['persist', 'remove'])]
     private Collection $subgenres;
 
     public function __construct()
@@ -86,5 +86,10 @@ class Genre
         }
 
         return $this;
+    }
+
+    public function __toString() 
+    {
+        return $this->name;
     }
 }

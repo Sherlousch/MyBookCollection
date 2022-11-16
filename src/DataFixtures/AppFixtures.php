@@ -90,9 +90,10 @@ class AppFixtures extends Fixture
                 $parent = $genreRepo->findOneBy(['name' => $parent_name]);
                 $genre->setParent($parent);
             }
-            $manager->persist($genre);         
+            $manager->persist($genre);
+            $manager->flush();         
         }
-        $manager->flush();
+        
  
        foreach (self::booksDataGenerator() as [$title, $author, $type, $bookcollection_description])
        {
