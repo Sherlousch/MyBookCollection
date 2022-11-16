@@ -4,6 +4,8 @@ namespace App\DataFixtures;
  
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Entity\Membre;
+use App\Repository\MembreRepository;
 use App\Entity\Bookcollection;
 use App\Repository\BookcollectionRepository;
 use App\Entity\Genre;
@@ -12,13 +14,22 @@ use App\Entity\Book;
  
 class AppFixtures extends Fixture
 {
-   /**
-    * Generates initialization data for bookcollections : [description]
+      /**
+    * Generates initialization data for membres : [name]
+    * @return \\Generator
+    */
+    private static function membreDataGenerator()
+    {
+        yield ["Lousch"];
+    }
+
+    /**
+    * Generates initialization data for bookcollections : [description, owner_name]
     * @return \\Generator
     */
    private static function bookcollectionsDataGenerator()
    {
-       yield ["Lousch's Collection"];
+       yield ["Lousch's Collection", "Lousch"];
    }
  
    /**
@@ -71,18 +82,28 @@ class AppFixtures extends Fixture
  
    public function load(ObjectManager $manager)
    {
-       $bookcollectionRepo = $manager->getRepository(Bookcollection::class);
- 
-       foreach (self::bookcollectionsDataGenerator() as [$description] ) {
-           $bookcollection = new Bookcollection();
-           $bookcollection->setDescription($description);
-           $manager->persist($bookcollection);         
-       }
-       $manager->flush();
+        $membreRepo = $manager->getRepository(Membre::class);
+        foreach (self::membreDataGenerator() as [$name] ) {
+            $membre = new Membre();
+            $membre->setName($name);
+            $manager->persist($membre);         
+        }
+        $manager->flush();
+        
+        $bookcollectionRepo = $manager->getRepository(Bookcollection::class);
+        foreach (self::bookcollectionsDataGenerator() as [$description, $membre_name] ) {
+            $bookcollection = new Bookcollection();
+            $bookcollection->setDescription($description);
+            $membre = $membreRepo->findOneBy(['name' => $membre_name]);
+            $bookcollection->setMembre($membre);
+            $manager->persist($bookcollection);
+            $manager->persist($membre);         
+        }
+        $manager->flush();
 
-       $genreRepo = $manager->getRepository(Genre::class);
+        $genreRepo = $manager->getRepository(Genre::class);
 
-       foreach (self::genresDataGenerator() as [$name, $parent_name] ) {
+        foreach (self::genresDataGenerator() as [$name, $parent_name] ) {
             $genre = new Genre();
             $genre->setName($name);
             if ($parent_name !== null) {
@@ -94,25 +115,25 @@ class AppFixtures extends Fixture
         }
         
  
-       foreach (self::booksDataGenerator() as [$title, $author, $genres_name, $bookcollection_description])
-       {
-           $bookcollection = $bookcollectionRepo->findOneBy(['description' => $bookcollection_description]);
-           $book = new Book();
-           $book->setCollection($bookcollection);
-           $book->setTitle($title);
-           $book->setAuthor($author);
-           foreach ($genres_name as $genre_name)
-           {
-            $genre = $genreRepo->findOneBy(['name' => $genre_name]);
-            $genre->addBook($book);
-            $book->addGenre($genre);
-            $manager->persist($genre);
-            $manager->persist($book);
-           }
-           $bookcollection->addBook($book);
-           // there's a cascade persist on bookcollection-books which avoids persisting down the relation
-           $manager->persist($bookcollection);
-       }
-       $manager->flush();
-   }
+        foreach (self::booksDataGenerator() as [$title, $author, $genres_name, $bookcollection_description])
+        {
+            $bookcollection = $bookcollectionRepo->findOneBy(['description' => $bookcollection_description]);
+            $book = new Book();
+            $book->setCollection($bookcollection);
+            $book->setTitle($title);
+            $book->setAuthor($author);
+            foreach ($genres_name as $genre_name)
+            {
+                $genre = $genreRepo->findOneBy(['name' => $genre_name]);
+                $genre->addBook($book);
+                $book->addGenre($genre);
+                $manager->persist($genre);
+                $manager->persist($book);
+            }
+            $bookcollection->addBook($book);
+            // there's a cascade persist on bookcollection-books which avoids persisting down the relation
+            $manager->persist($bookcollection);
+        }
+        $manager->flush();
+    }
 }

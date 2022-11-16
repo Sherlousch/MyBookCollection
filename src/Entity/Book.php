@@ -28,9 +28,13 @@ class Book
     #[ORM\ManyToMany(targetEntity: Genre::class, inversedBy: 'books', cascade: ['persist', 'remove'])]
     private Collection $genres;
 
+    #[ORM\ManyToMany(targetEntity: Bookcase::class, mappedBy: 'books')]
+    private Collection $bookcases;
+
     public function __construct()
     {
         $this->genres = new ArrayCollection();
+        $this->bookcases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,6 +104,33 @@ class Book
     public function removeGenre(Genre $genre): self
     {
         $this->genres->removeElement($genre);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bookcase>
+     */
+    public function getBookcases(): Collection
+    {
+        return $this->bookcases;
+    }
+
+    public function addBookcase(Bookcase $bookcase): self
+    {
+        if (!$this->bookcases->contains($bookcase)) {
+            $this->bookcases->add($bookcase);
+            $bookcase->addBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookcase(Bookcase $bookcase): self
+    {
+        if ($this->bookcases->removeElement($bookcase)) {
+            $bookcase->removeBook($this);
+        }
 
         return $this;
     }
