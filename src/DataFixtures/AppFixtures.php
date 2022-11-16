@@ -41,33 +41,32 @@ class AppFixtures extends Fixture
 
    /**
     * Generates initialization data for books:
-    *  [title, author, genre_name, bookcollection_description]
+    *  [title, author, genres_name, bookcollection_description]
     * @return \\Generator
     */
    private static function booksDataGenerator()
    {
-       yield ["Solo Leveling T1", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T2", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T3", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T4", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T5", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T6", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T7", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Solo Leveling T8", "Chugong", "Manhwa", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T1", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T2", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T3", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T4", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T5", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T6", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T7", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T8", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T9", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T10", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T11", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["Fullmetal Alchemist perfect T12", "Hiromu Arakawa", "Manga", "Lousch's Collection"];
-       yield ["The Hobbit", "J.R.R. Tolkien", "Novel", "Lousch's Collection"];
- 
+       yield ["Solo Leveling T1", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T2", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T3", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T4", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T5", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T6", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T7", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Solo Leveling T8", "Chugong", ["Manhwa"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T1", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T2", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T3", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T4", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T5", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T6", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T7", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T8", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T9", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T10", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T11", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["Fullmetal Alchemist perfect T12", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
+       yield ["The Hobbit", "J.R.R. Tolkien", ["Novel", "Fantasy novel"], "Lousch's Collection"];
    }
  
    public function load(ObjectManager $manager)
@@ -95,21 +94,24 @@ class AppFixtures extends Fixture
         }
         
  
-       foreach (self::booksDataGenerator() as [$title, $author, $genre_name, $bookcollection_description])
+       foreach (self::booksDataGenerator() as [$title, $author, $genres_name, $bookcollection_description])
        {
            $bookcollection = $bookcollectionRepo->findOneBy(['description' => $bookcollection_description]);
-           $genre = $genreRepo->findOneBy(['name' => $genre_name]);
            $book = new Book();
            $book->setCollection($bookcollection);
            $book->setTitle($title);
            $book->setAuthor($author);
-           $genre->addBook($book);
-           $book->addGenre($genre);
+           foreach ($genres_name as $genre_name)
+           {
+            $genre = $genreRepo->findOneBy(['name' => $genre_name]);
+            $genre->addBook($book);
+            $book->addGenre($genre);
+            $manager->persist($genre);
+            $manager->persist($book);
+           }
            $bookcollection->addBook($book);
            // there's a cascade persist on bookcollection-books which avoids persisting down the relation
            $manager->persist($bookcollection);
-           $manager->persist($genre);
-           $manager->persist($book);
        }
        $manager->flush();
    }
