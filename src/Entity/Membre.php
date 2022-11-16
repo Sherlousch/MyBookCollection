@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\MembreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MembreRepository::class)]
@@ -23,14 +21,6 @@ class Membre
 
     #[ORM\OneToOne(inversedBy: 'membre', cascade: ['persist', 'remove'])]
     private ?Bookcollection $bookcollection = null;
-
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Bookcase::class, orphanRemoval: true)]
-    private Collection $bookcases;
-
-    public function __construct()
-    {
-        $this->bookcases = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -76,35 +66,5 @@ class Membre
     public function __toString() 
     {
         return $this->name;
-    }
-
-    /**
-     * @return Collection<int, Bookcase>
-     */
-    public function getBookcases(): Collection
-    {
-        return $this->bookcases;
-    }
-
-    public function addBookcase(Bookcase $bookcase): self
-    {
-        if (!$this->bookcases->contains($bookcase)) {
-            $this->bookcases->add($bookcase);
-            $bookcase->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBookcase(Bookcase $bookcase): self
-    {
-        if ($this->bookcases->removeElement($bookcase)) {
-            // set the owning side to null (unless already changed)
-            if ($bookcase->getOwner() === $this) {
-                $bookcase->setOwner(null);
-            }
-        }
-
-        return $this;
     }
 }
