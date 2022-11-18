@@ -3,6 +3,9 @@
 {% block title %}Edit Bookcase{% endblock %}
 
 {% block body %}
+    <header>
+    </header>
+    <main>
     <h1>Edit Bookcase</h1>
 
     {{ include('bookcase/_form.html.twig', {'button_label': 'Update'}) }}
@@ -10,4 +13,5 @@
     <a href="{{ path('app_bookcase_index') }}">back to list</a>
 
     {{ include('bookcase/_delete_form.html.twig') }}
+    </main>
 {% endblock %}

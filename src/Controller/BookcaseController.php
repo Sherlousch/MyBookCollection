@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ObjectManager;
 
 #[Route('/bookcase')]
 class BookcaseController extends AbstractController
@@ -30,6 +31,12 @@ class BookcaseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $bookcaseRepository->save($bookcase, true);
+            
+            // Make sure message will be displayed after redirect
+            $this->addFlash('message', 'bien ajouté');
+            // $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
+            // or to $this->get('session')->getFlashBag()->add();
+   
 
             return $this->redirectToRoute('app_bookcase_index', [], Response::HTTP_SEE_OTHER);
         }
