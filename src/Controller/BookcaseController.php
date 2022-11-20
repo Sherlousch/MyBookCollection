@@ -82,4 +82,21 @@ class BookcaseController extends AbstractController
 
         return $this->redirectToRoute('app_bookcase_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{bookcase_id}/book/{book_id}', name: 'app_bookcase_book_show', methods: ['GET'])]
+    public function bookShow(Bookcase $bookcase, Book $book): Response
+    {
+        if(! $bookcase->getBooks()->contains($book)) {
+            throw $this->createNotFoundException("Couldn't find such a book in this bookcase!");
+        }
+    
+        if(! $bookcase->isPublished()) {
+            throw $this->createAccessDeniedException("You cannot access the requested ressource!");
+        }
+
+        return $this->render('bookcase/book_show.html.twig', [
+            'book' => $book,
+            'bookcase' => $bookcase
+        ]);
+    }
 }

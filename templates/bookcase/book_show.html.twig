@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}About {{ book.title }}{% endblock %}
+
+{% block body %}
+    <main>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Genres</th>
+                    <td>{{ book.genres|join(', ') }}</td>
+                </tr>
+                <tr>
+                    <th>Author</th>
+                    <td>{{ book.author }}</td>
+                </tr>
+                <tr>
+                    <th>Collection</th>
+                    <td> <a href="/bookcollection/{{book.collection.id}}">{{book.collection}} </a> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h1>Bookcase</h1>
+        <a href="{{ path('app_bookcase_show', { 'id': bookcase.id}) }}">back to bookcase</a>
+    </main>
+{% endblock %}    

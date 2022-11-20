@@ -22,6 +22,15 @@
                 </tr>
             </tbody>
         </table>
+        
+        <h2>Books</h2>
+        <ul>
+        {% for book in bookcase.books %}
+        <li>
+            <a href="{{ path('app_bookcase_book_show', {'bookcase_id': bookcase.id, 'book_id' : book.id}) }}">{{ book }}</a>
+        </li>
+        {% endfor %}
+        </ul>
 
         <a href="{{ path('app_bookcase_index') }}">back to list</a>
 
