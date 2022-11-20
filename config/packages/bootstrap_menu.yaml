@@ -4,4 +4,4 @@ bootstrap_menu:
       items:
         bookcollections:
           label: 'Books'
-          route: 'bookcollection_list'
+          route: 'app_book_index'

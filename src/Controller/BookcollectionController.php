@@ -3,44 +3,29 @@
 namespace App\Controller;
 
 use App\Entity\Bookcollection;
+use App\Repository\BookcollectionRepository;
 use App\Entity\Book;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
+#[Route('/bookcollection')]
 class BookcollectionController extends AbstractController
 {
-    #[Route('/bookcollection', name: 'app_bookcollection')]
-    public function index(): Response
+    #[Route('/', name: 'app_bookcollection_index')]
+    public function index(BookcollectionRepository $bookcollectionRepository): Response
     {
         return $this->render('bookcollection/index.html.twig', [
-            'controller_name' => 'BookcollectionController',
+            'bookcollections' => $bookcollectionRepository->findAll(),
         ]);
     }
 
-    /**
-    * Lists all Bookcollections entities.
-    *
-    * @Route("/bookcollection/list", name = "bookcollection_list", methods="GET")
-    */
-    public function listAction(ManagerRegistry $doctrine): Response
-    {
-        $entityManager= $doctrine->getManager();
-        $bookcollections = $entityManager->getRepository(Bookcollection::class)->findAll();
-
-        dump($bookcollections);
-
-        return $this->render('bookcollection/list.html.twig',
-            [ 'controller_name' => 'BookcollectionController',
-            'bookcollections' => $bookcollections ]
-            );
-    }
 
     /**
     * Show a bookcollection
     * 
-    * @Route("/bookcollection/{id}", name="bookcollection_show", requirements={"id"="\d+"})
+    * @Route("/{id}", name="bookcollection_show", requirements={"id"="\d+"})
     *    note that the id must be an integer, above
     *    
     * @param Integer $id

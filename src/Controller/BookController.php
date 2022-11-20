@@ -7,40 +7,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Book;
+use App\Repository\BookRepository;
 use App\Entity\Genre;
 
-
+#[Route('/book')]
 class BookController extends AbstractController
 {
-    #[Route('/book', name: 'app_book')]
-    public function index(): Response
+    #[Route('/', name: 'app_book_index')]
+    public function index(BookRepository $bookRepository): Response
     {
         return $this->render('book/index.html.twig', [
-            'controller_name' => 'BookController',
+            'books' => $bookRepository->findAll(),
         ]);
-    }
-
-    /**
-    * Lists all Books entities.
-    *
-    * @Route("/book/list", name = "book_list", methods="GET")
-    */
-    public function listAction(ManagerRegistry $doctrine): Response
-    {
-        $entityManager= $doctrine->getManager();
-        $books = $entityManager->getRepository(Book::class)->findAll();
-
-        dump($books);
-
-        return $this->render('book/list.html.twig',
-            [ 'books' => $books ]
-            );
     }
 
     /**
     * Show a book
     * 
-    * @Route("/book/{id}", name="book_show", requirements={"id"="\d+"})
+    * @Route("/{id}", name="book_show", requirements={"id"="\d+"})
     *    note that the id must be an integer, above
     *    
     * @param Integer $id
