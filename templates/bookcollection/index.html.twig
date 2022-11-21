@@ -5,9 +5,28 @@
 {% block body %}
 <h1>Bookcollection index</h1>
 
-<ul>
+<table class="table">
+  <thead>
+    <tr>
+        <th>Description</th>
+        <th>Owner</th>
+    </tr>
+  </thead>
+  <tbody>
   {% for bookcollection in bookcollections %}
-  <li> <a href="/bookcollection/{{bookcollection.id}}">{{bookcollection.description}}</a> </li>
+      <tr>
+          <td>{{ bookcollection.description }}</td>
+          <td>{{ bookcollection.membre }}</td>
+          <td>
+              <a href="{{ path('app_bookcollection_show', {'id': bookcollection.id}) }}">show</a>
+              <a href="{{ path('app_bookcollection_edit', {'id': bookcollection.id}) }}">edit</a>
+          </td>
+      </tr>
+  {% else %}
+      <tr>
+          <td colspan="4">no records found</td>
+      </tr>
   {% endfor %}
-</ul>
+  </tbody>
+</table>
 {% endblock %}
