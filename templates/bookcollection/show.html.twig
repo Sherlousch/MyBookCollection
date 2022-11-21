@@ -5,9 +5,11 @@
 {% block body %}
 <h1>{{bookcollection.description}}</h1>
 <h2>Owned by <a href="{{ path('app_membre_show', {'id' : bookcollection.membre.id}) }}">{{ bookcollection.membre }}</a></h2>
+<h2>Books:</h2>
 <ul>
   {% for book in bookcollection.books %}
-  <li> <a href="/book/{{book.id}}">{{book.title}} </a> </li>
+  <li> <a href="{{ path('app_book_show', {'id' : book.id}) }}">{{book}} </a> </li>
   {% endfor %}
+  <a href="{{ path('app_book_new', {'bookcollection_id': bookcollection.id}) }}">add new book</a>
 </ul>
 {% endblock %}

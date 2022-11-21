@@ -92,6 +92,7 @@ class BookcollectionController extends AbstractController
         return $this->renderForm('bookcollection/new.html.twig', [
             'bookcollection' => $bookcollection,
             'form' => $form,
+            'membre' => $membre,
         ]);
     }
 }

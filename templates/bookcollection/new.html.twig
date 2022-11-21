@@ -8,6 +8,6 @@
 
         {{ include('bookcollection/_form.html.twig') }}
 
-        <a href="{{ path('app_bookcollection_index') }}">back to list</a>
+        <a href="{{ path('app_membre_show', {'id' : membre.id}) }}">back to membre</a>
     </main>
 {% endblock %}

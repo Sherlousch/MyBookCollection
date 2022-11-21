@@ -4,7 +4,9 @@
 
 {% block body %}
     <main>
-        <h1>Bookcase</h1>
+        <h1>Bookcase {{bookcase}}</h1>
+
+        <h2>Owned by <a href="{{ path('app_membre_show', {'id' : bookcase.membre.id}) }}">{{ bookcase.membre }}</a></h2>
 
         <table class="table">
             <tbody>
@@ -31,8 +33,6 @@
         </li>
         {% endfor %}
         </ul>
-
-        <a href="{{ path('app_bookcase_index') }}">back to list</a>
 
         <a href="{{ path('app_bookcase_edit', {'id': bookcase.id}) }}">edit</a>
 

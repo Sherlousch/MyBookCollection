@@ -15,7 +15,7 @@ class BookType extends AbstractType
             ->add('title')
             ->add('author')
             ->add('genres')
-            ->add('collection')
+            ->add('collection', null, ['disabled' => true, ])
         ;
     }
 

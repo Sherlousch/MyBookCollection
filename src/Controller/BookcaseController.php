@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Bookcase;
 use App\Form\BookcaseType;
 use App\Entity\Book;
+use App\Entity\Membre;
 use App\Repository\BookcaseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,10 +25,12 @@ class BookcaseController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_bookcase_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, BookcaseRepository $bookcaseRepository): Response
+    #[Route('/new/{membre_id}', name: 'app_bookcase_new', methods: ['GET', 'POST'])]
+    #[ParamConverter('membre', class: Membre::class, options: ['id' => 'membre_id'])]
+    public function new(Request $request, BookcaseRepository $bookcaseRepository, Membre $membre): Response
     {
         $bookcase = new Bookcase();
+        $bookcase->setMembre($membre);
         $form = $this->createForm(BookcaseType::class, $bookcase);
         $form->handleRequest($request);
 

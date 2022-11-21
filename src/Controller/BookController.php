@@ -6,11 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use App\Form\BookType;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Book;
 use App\Repository\BookRepository;
 use App\Entity\Genre;
+use App\Entity\Bookcollection;
 
 #[Route('/book')]
 class BookController extends AbstractController
@@ -23,10 +25,12 @@ class BookController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_book_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, BookRepository $bookRepository): Response
+    #[Route('/new/{bookcollection_id}', name: 'app_book_new', methods: ['GET', 'POST'])]
+    #[ParamConverter('bookcollection', class: Bookcollection::class, options: ['id' => 'bookcollection_id'])]
+    public function new(Request $request, BookRepository $bookRepository, Bookcollection $bookcollection): Response
     {
         $book = new Book();
+        $book->setCollection($bookcollection);
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 

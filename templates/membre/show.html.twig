@@ -27,6 +27,13 @@
                 <td><a href="{{ path('app_bookcollection_show', {'id' : membre.bookcollection.id}) }}">{{ membre.bookcollection }}</a></td>
                 {% endif %}
             </tr>
+            <tr>
+                <th>Bookcases</th>
+                {% for bookcase in membre.bookcases %}
+                <td><a href="{{ path('app_bookcase_show', {'id' : bookcase.id}) }}">{{ bookcase }}</a></td>
+                {% endfor %}
+                <td><a href="{{ path('app_bookcase_new', {'membre_id': membre.id}) }}">add new</a></td>
+            </tr>
         </tbody>
     </table>
 
