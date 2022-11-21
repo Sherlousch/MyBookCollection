@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\Persistence\ManagerRegistry;
 
 #[Route('/bookcollection')]
@@ -68,6 +69,7 @@ class BookcollectionController extends AbstractController
     }
 
     #[Route('/new/{membre_id}', name: 'app_bookcollection_new', methods: ['GET', 'POST'])]
+    #[ParamConverter('membre', class: Membre::class, options: ['id' => 'membre_id'])]
     public function new(Request $request, BookcollectionRepository $bookcollectionRepository, Membre $membre): Response
     {
         $bookcollection = new Bookcollection();

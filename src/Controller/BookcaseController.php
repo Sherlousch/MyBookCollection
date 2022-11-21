@@ -4,12 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Bookcase;
 use App\Form\BookcaseType;
+use App\Entity\Book;
 use App\Repository\BookcaseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Annotation\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\Persistence\ObjectManager;
 
 #[Route('/bookcase')]
@@ -88,12 +89,12 @@ class BookcaseController extends AbstractController
     #[ParamConverter('bookcase', class: Bookcase::class, options: ['id' => 'bookcase_id'])]
     #[ParamConverter('book', class: Book::class, options: ['id' => 'book_id'])]
     public function bookShow(Bookcase $bookcase, Book $book): Response
-    {
+    {  
         if(! $bookcase->getBooks()->contains($book)) {
             throw $this->createNotFoundException("Couldn't find such a book in this bookcase!");
         }
     
-        if(! $bookcase->isPublished()) {
+        if(! $bookcase->isReleased()) {
             throw $this->createAccessDeniedException("You cannot access the requested ressource!");
         }
 

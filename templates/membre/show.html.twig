@@ -21,8 +21,11 @@
             </tr>
             <tr>
                 <th>Collection</th>
+                {% if membre.bookcollection == null %}
+                    <td><a href="{{ path('app_bookcollection_new', {'membre_id': membre.id}) }}">add new</a></td>
+                {% else %}
                 <td><a href="{{ path('app_bookcollection_show', {'id' : membre.bookcollection.id}) }}">{{ membre.bookcollection }}</a></td>
-                <td><a href="{{ path('app_bookcollection_new', {'membre_id': membre.id}) }}">add new</a></td>
+                {% endif %}
             </tr>
         </tbody>
     </table>
