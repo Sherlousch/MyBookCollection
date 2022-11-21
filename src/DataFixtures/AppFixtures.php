@@ -11,6 +11,10 @@ use App\Repository\BookcollectionRepository;
 use App\Entity\Genre;
 use App\Repository\GenreRepository;
 use App\Entity\Book;
+use App\Repository\BookRepository;
+use App\Entity\Bookcase;
+use App\Repository\BookcaseRepository;
+
  
 class AppFixtures extends Fixture
 {
@@ -21,6 +25,7 @@ class AppFixtures extends Fixture
     private static function membreDataGenerator()
     {
         yield ["Lousch"];
+        yield ["Club Jeux"];
     }
 
     /**
@@ -30,6 +35,7 @@ class AppFixtures extends Fixture
    private static function bookcollectionsDataGenerator()
    {
        yield ["Lousch's Collection", "Lousch"];
+       yield ["CJ's Collection", "Club Jeux"];
    }
  
    /**
@@ -78,7 +84,75 @@ class AppFixtures extends Fixture
        yield ["Fullmetal Alchemist perfect T11", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
        yield ["Fullmetal Alchemist perfect T12", "Hiromu Arakawa", ["Manga", "Shonen"], "Lousch's Collection"];
        yield ["The Hobbit", "J.R.R. Tolkien", ["Novel", "Fantasy novel"], "Lousch's Collection"];
+       yield ["The Lord of the Rings T1", "J.R.R. Tolkien", ["Novel", "Fantasy novel"], "Lousch's Collection"];
+       yield ["The Lord of the Rings T2", "J.R.R. Tolkien", ["Novel", "Fantasy novel"], "Lousch's Collection"];
+       yield ["The Lord of the Rings T3", "J.R.R. Tolkien", ["Novel", "Fantasy novel"], "Lousch's Collection"];
+       yield ["Les Chevaliers d'Emeraude T1", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T2", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T3", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T4", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T5", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T6", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T7", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T8", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T9", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T10", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T11", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
+       yield ["Les Chevaliers d'Emeraude T12", "Anne Robillard", ["Novel", "Fantasy novel"], "CJ's Collection"];
    }
+
+      /**
+    * Generates initialization data for bookcases:
+    *  [description, membre_name, released, books_title]
+    * @return \\Generator
+    */
+    private static function bookcasesDataGenerator()
+    {
+        yield ["FMA Perfect", "Lousch", false, [
+            "Fullmetal Alchemist perfect T1",
+            "Fullmetal Alchemist perfect T2",
+            "Fullmetal Alchemist perfect T3",
+            "Fullmetal Alchemist perfect T4",
+            "Fullmetal Alchemist perfect T5",
+            "Fullmetal Alchemist perfect T6",
+            "Fullmetal Alchemist perfect T7",
+            "Fullmetal Alchemist perfect T8",
+            "Fullmetal Alchemist perfect T9",
+            "Fullmetal Alchemist perfect T10",
+            "Fullmetal Alchemist perfect T11",
+            "Fullmetal Alchemist perfect T12",
+        ]];
+        yield ["Solo Leveling", "Lousch", false, [
+            "Solo Leveling T1",
+            "Solo Leveling T2",
+            "Solo Leveling T3",
+            "Solo Leveling T4",
+            "Solo Leveling T5",
+            "Solo Leveling T6",
+            "Solo Leveling T7",
+            "Solo Leveling T8",
+        ]];
+        yield ["Middle-Earth Saga", "Lousch", true, [
+            "The Hobbit",
+            "The Lord of the Rings T1",
+            "The Lord of the Rings T2",
+            "The Lord of the Rings T3",
+        ]];
+        yield ["Les Chevaliers d'Emeraude", "Club Jeux", true, [
+            "Les Chevaliers d'Emeraude T1",
+            "Les Chevaliers d'Emeraude T2",
+            "Les Chevaliers d'Emeraude T3",
+            "Les Chevaliers d'Emeraude T4",
+            "Les Chevaliers d'Emeraude T5",
+            "Les Chevaliers d'Emeraude T6",
+            "Les Chevaliers d'Emeraude T7",
+            "Les Chevaliers d'Emeraude T8",
+            "Les Chevaliers d'Emeraude T9",
+            "Les Chevaliers d'Emeraude T10",
+            "Les Chevaliers d'Emeraude T11",
+            "Les Chevaliers d'Emeraude T12",
+        ]];
+    }
  
    public function load(ObjectManager $manager)
    {
@@ -133,6 +207,28 @@ class AppFixtures extends Fixture
             $bookcollection->addBook($book);
             // there's a cascade persist on bookcollection-books which avoids persisting down the relation
             $manager->persist($bookcollection);
+        }
+        $manager->flush();
+
+        $bookRepo = $manager->getRepository(Book::class);
+        foreach (self::bookcasesDataGenerator() as [$description, $membre_name, $released, $books_title])
+        {
+            $membre = $membreRepo->findOneBy(['name' => $membre_name]);
+            $bookcase = new Bookcase();
+            $bookcase->setMembre($membre);
+            $bookcase->setDescription($description);
+            $bookcase->setReleased($released);
+            foreach ($books_title as $book_title)
+            {
+                $book = $bookRepo->findOneBy(['title' => $book_title]);
+                $bookcase->addBook($book);
+                $book->addBookcase($bookcase);
+                $manager->persist($bookcase);
+                $manager->persist($book);
+            }
+            $membre->addBookcase($bookcase);
+            // there's a cascade persist on bookcollection-books which avoids persisting down the relation
+            $manager->persist($membre);
         }
         $manager->flush();
     }

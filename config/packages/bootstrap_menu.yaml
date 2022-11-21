@@ -2,6 +2,9 @@ bootstrap_menu:
   menus:
     main:
       items:
+        bookcollections:
+          label: 'Bookcollections'
+          route: 'app_bookcollection_index'
         books:
           label: 'Books'
           route: 'app_book_index'
