@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Bookcase;
 use App\Form\BookcaseType;
 use App\Entity\Book;
+use App\Entity\BookRepository;
 use App\Entity\Membre;
 use App\Repository\BookcaseRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

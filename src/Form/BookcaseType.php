@@ -4,10 +4,12 @@ namespace App\Form;
 
 use App\Entity\Bookcase;
 use App\Entity\Membre;
+use App\Entity\Book;
 use App\Repository\BookRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class BookcaseType extends AbstractType
 {
@@ -16,18 +18,13 @@ class BookcaseType extends AbstractType
         dump($options);
         $bookcase = $options['data'] ?? null;
         $membre = $bookcase->getMembre();
+        $bookcollection = $membre->getBookcollection();
+        $books = $bookcollection->getBooks();
         $builder
             ->add('description')
             ->add('released')
             ->add('membre', null, ['disabled'   => true,])
-            ->add('books', null, [
-                'query_builder' => function (BookRepository $er) use ($membre) {
-                    return $er->createQueryBuilder('bookcase')
-                    ->leftJoin('bookcase.collection', 'bookcollection')
-                    ->andWhere('bookcollection.membre = :membre')
-                    ->setParameter('membre', $membre)
-                ;}
-            ])
+            ->add('books')
         ;
     }
 
