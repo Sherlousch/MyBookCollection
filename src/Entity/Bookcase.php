@@ -23,7 +23,7 @@ class Bookcase
 
     #[ORM\ManyToOne(inversedBy: 'bookcases')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Membre $owner = null;
+    private ?Membre $membre = null;
 
     #[ORM\ManyToMany(targetEntity: Book::class, inversedBy: 'bookcases')]
     private Collection $books;
@@ -62,14 +62,14 @@ class Bookcase
         return $this;
     }
 
-    public function getOwner(): ?Membre
+    public function getMembre(): ?Membre
     {
-        return $this->owner;
+        return $this->membre;
     }
 
-    public function setOwner(?Membre $owner): self
+    public function setMembre(?Membre $membre): self
     {
-        $this->owner = $owner;
+        $this->membre = $membre;
 
         return $this;
     }

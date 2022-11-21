@@ -24,7 +24,7 @@ class Membre
     #[ORM\OneToOne(inversedBy: 'membre', cascade: ['persist', 'remove'])]
     private ?Bookcollection $bookcollection = null;
 
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Bookcase::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'membre', targetEntity: Bookcase::class, orphanRemoval: true)]
     private Collection $bookcases;
 
     public function __construct()
@@ -90,7 +90,7 @@ class Membre
     {
         if (!$this->bookcases->contains($bookcase)) {
             $this->bookcases->add($bookcase);
-            $bookcase->setOwner($this);
+            $bookcase->setMembre($this);
         }
 
         return $this;
@@ -100,8 +100,8 @@ class Membre
     {
         if ($this->bookcases->removeElement($bookcase)) {
             // set the owning side to null (unless already changed)
-            if ($bookcase->getOwner() === $this) {
-                $bookcase->setOwner(null);
+            if ($bookcase->getMembre() === $this) {
+                $bookcase->setMembre(null);
             }
         }
 

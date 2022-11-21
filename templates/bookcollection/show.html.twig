@@ -4,7 +4,7 @@
 
 {% block body %}
 <h1>{{bookcollection.description}}</h1>
-<h2>Owned by {{bookcollection.membre}}</h2>
+<h2>Owned by <a href="{{ path('app_membre_show', {'id' : bookcollection.membre.id}) }}">{{ bookcollection.membre }}</a></h2>
 <ul>
   {% for book in bookcollection.books %}
   <li> <a href="/book/{{book.id}}">{{book.title}} </a> </li>

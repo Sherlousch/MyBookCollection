@@ -24,7 +24,7 @@ class AppFixtures extends Fixture
     }
 
     /**
-    * Generates initialization data for bookcollections : [description, owner_name]
+    * Generates initialization data for bookcollections : [description, membre_name]
     * @return \\Generator
     */
    private static function bookcollectionsDataGenerator()

@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Bookcollection;
 use App\Repository\BookcollectionRepository;
 use App\Entity\Book;
+use App\Entity\Membre;
+use App\Repository\MembreRepository;
 use App\Form\BookcollectionType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,6 +62,32 @@ class BookcollectionController extends AbstractController
         }
 
         return $this->renderForm('bookcollection/edit.html.twig', [
+            'bookcollection' => $bookcollection,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/new/{membre_id}', name: 'app_bookcollection_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, BookcollectionRepository $bookcollectionRepository, Membre $membre): Response
+    {
+        $bookcollection = new Bookcollection();
+        $bookcollection->setMembre($membre);
+        $form = $this->createForm(BookcollectionType::class, $bookcollection);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $bookcollectionRepository->save($bookcollection, true);
+            
+            // Make sure message will be displayed after redirect
+            $this->addFlash('message', 'bien ajouté');
+            // $this->addFlash() is equivalent to $request->getSession()->getFlashBag()->add()
+            // or to $this->get('session')->getFlashBag()->add();
+   
+
+            return $this->redirectToRoute('app_bookcollection_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('bookcollection/new.html.twig', [
             'bookcollection' => $bookcollection,
             'form' => $form,
         ]);

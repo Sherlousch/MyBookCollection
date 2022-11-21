@@ -14,7 +14,7 @@ class BookcaseType extends AbstractType
         $builder
             ->add('description')
             ->add('released')
-            ->add('owner')
+            ->add('membre')
             ->add('books')
         ;
     }

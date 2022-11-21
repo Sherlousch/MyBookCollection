@@ -25,11 +25,9 @@ class BookcaseCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
 
-            AssociationField::new('owner'),
+            AssociationField::new('membre'),
 
-            BooleanField::new('released')
-            ->onlyOnForms()
-            ->hideWhenCreating(),
+            BooleanField::new('released'),
 
             TextField::new('description'),
 
@@ -42,20 +40,20 @@ class BookcaseCrudController extends AbstractCrudController
             ->setTemplatePath('admin/fields/bookcollection_books.html.twig')
             // Ajout possible seulement pour des books qui
             // appartiennent même propriétaire de la bookcollection
-            // que le owner de la bookcase
+            // que le membre de la bookcase
             ->setQueryBuilder(
                 function (QueryBuilder $queryBuilder) 
                 {
                     // récupération de l'instance courante de bookcase
                     $currentBookcase = $this->getContext()->getEntity()->getInstance();
-                    $owner = $currentBookcase->getOwner();
-                    $memberId = $owner->getId();
-                    // charge les seuls books dont le 'owner' de la bookcollection
-                    // est le owner de la galerie
+                    $membre = $currentBookcase->getMembre();
+                    $membreId = $membre->getId();
+                    // charge les seuls books dont le 'membre' de la bookcollection
+                    // est le membre de la galerie
                     $queryBuilder->leftJoin('entity.bookcollection', 'i')
-                        ->leftJoin('i.owner', 'm')
-                        ->andWhere('m.id = :member_id')
-                        ->setParameter('member_id', $memberId);    
+                        ->leftJoin('i.membre', 'm')
+                        ->andWhere('m.id = :membre_id')
+                        ->setParameter('membre_id', $membreId);    
                     return $queryBuilder;
                 }
             ),

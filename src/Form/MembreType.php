@@ -2,27 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Bookcollection;
+use App\Entity\Membre;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class BookcollectionType extends AbstractType
+class MembreType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('name')
             ->add('description')
-            ->add('membre', null, [
-                'disabled'   => true,
-            ])
+            ->add('bookcollection')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Bookcollection::class,
+            'data_class' => Membre::class,
         ]);
     }
 }
